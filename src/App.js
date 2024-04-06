@@ -1,6 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
-import { Route, Routes, Router } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Route, Routes } from 'react-router-dom';
 import AppLayout from './Layout/AppLayout';
 import Homepage from './pages/Homepage/Homepage';
 import MovieDetailPage from './pages/MovieDetail/MovieDetailPage';
@@ -13,23 +13,14 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 function App() {
 	return (
-		<Router>
-			<Routes>
-				<Route path='/' element={<AppLayout />} />
+		<Routes>
+			<Route path='/' element={<AppLayout />}>
 				<Route index element={<Homepage />} />
-
-				<Route path='movies'>
-					<Route index element={<MoviePage />} />
-					<Route path=':id' element={<MovieDetailPage />} />
-				</Route>
-				<Route path='*' element={<NotFoundPage />} />
-
-				{/* 
-        <Route path='/movies' element={<MoviePage />} />
-				<Route path='/movies/:id' element={<MovieDetailPage />} /> 
-        */}
-			</Routes>
-		</Router>
+				<Route path='movies' element={<MoviePage />} />
+				<Route path='movies/:id' element={<MovieDetailPage />} />
+			</Route>
+			<Route path='*' element={<NotFoundPage />} />
+		</Routes>
 	);
 }
 
