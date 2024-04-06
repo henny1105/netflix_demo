@@ -1,5 +1,6 @@
 body {
 	background: #000;
+	color: #fff;
 }
 .navbar,
 .navbar > .container-fluid {
@@ -16,4 +17,7 @@ body {
 .nav-link:focus,
 .nav-link:hover {
 	color: #fff;
+}
+.btn-danger {
+	background: transparent;
 }
