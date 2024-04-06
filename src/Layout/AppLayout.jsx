@@ -12,7 +12,7 @@ const AppLayout = () => {
 		<div className='inner'>
 			<Navbar expand='lg' className='bg-body-tertiary'>
 				<Container fluid>
-					<Navbar.Brand href='#'>
+					<Navbar.Brand as={Link} to='/'>
 						<img src='https://images.ctfassets.net/4cd45et68cgf/4nBnsuPq03diC5eHXnQYx/d48a4664cdc48b6065b0be2d0c7bc388/Netflix-Logo.jpg' width={150} alt='로고 이미지' />
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='navbarScroll' />
