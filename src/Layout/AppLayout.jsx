@@ -26,7 +26,7 @@ const AppLayout = () => {
 							</Nav.Link>
 						</Nav>
 						<Form className='d-flex'>
-							<Form.Control type='search' placeholder='Search' className='me-2' aria-label='Search' />
+							<Form.Control type='search' placeholder='Search for movies' className='me-2' aria-label='Search' />
 							<Button variant='danger'>Search</Button>
 						</Form>
 					</Navbar.Collapse>
