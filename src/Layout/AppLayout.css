@@ -1,9 +1,11 @@
+* {
+	color: #fff;
+}
 body {
 	background: #000 !important;
-	color: #fff !important;
 }
 .navbar {
-	height: 80px;
+	height: 8rem;
 }
 .navbar > .container-fluid {
 	height: 100%;
@@ -14,7 +16,7 @@ body {
 	padding: 0;
 }
 .inner {
-	max-width: 1440px;
+	max-width: 144rem;
 	margin: 0 auto;
 }
 .nav-link {
@@ -26,4 +28,20 @@ body {
 }
 .btn-danger {
 	background: transparent;
+}
+.form-control {
+	padding: 0.6rem 1.2rem;
+	font-size: 1.5rem;
+}
+.btn {
+	font-size: 1.5rem;
+	padding: 1rem;
+	width: 10rem;
+}
+.navbar-nav {
+	gap: 2rem;
+	font-size: 1.7rem;
+}
+.navbar-brand {
+	margin-right: 10rem;
 }
