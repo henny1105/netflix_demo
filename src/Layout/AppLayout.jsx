@@ -9,8 +9,8 @@ import './AppLayout.css';
 
 const AppLayout = () => {
 	return (
-		<div className='inner'>
-			<Navbar expand='lg' className='bg-body-tertiary'>
+		<div>
+			<Navbar expand='lg' className='bg-body-tertiary inner'>
 				<Container fluid>
 					<Navbar.Brand as={Link} to='/'>
 						<img src='//i.namu.wiki/i/My20U8bGJMuTWnJE95eJcg2YvKqkEpIn3mZy-S-nApk0IwK1mBQnHlZA_rUgu7wNJGCMtlp_cPdWd7WcdTDBZQ.svg' width={150} alt='로고 이미지' />

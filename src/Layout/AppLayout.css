@@ -1,6 +1,12 @@
 body {
-	background: #000;
-	color: #fff;
+	background: #000 !important;
+	color: #fff !important;
+}
+.navbar {
+	height: 80px;
+}
+.navbar > .container-fluid {
+	height: 100%;
 }
 .navbar,
 .navbar > .container-fluid {
