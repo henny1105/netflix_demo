@@ -45,3 +45,30 @@ body {
 .navbar-brand {
 	margin-right: 10rem;
 }
+
+/* 반응형 */
+
+@media screen and (max-width: 1440px) {
+	.inner {
+		max-width: 100%;
+		padding: 0 5rem;
+	}
+	.navbar.inner {
+		padding: 0;
+	}
+	.navbar .container-fluid {
+		padding: 0 5rem;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.inner {
+		padding: 0 1.75rem;
+	}
+	.navbar.inner {
+		padding: 0;
+	}
+	.navbar .container-fluid {
+		padding: 0 1.75rem;
+	}
+}
