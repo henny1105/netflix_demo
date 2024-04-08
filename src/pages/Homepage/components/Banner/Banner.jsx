@@ -6,6 +6,8 @@ import './Banner.style.css';
 const Banner = () => {
 	const { data, isLoading, isError, error } = usePopularMoviesQuery();
 
+	console.log(data);
+
 	if (isLoading) {
 		return <h1>Loading...</h1>;
 	}
@@ -17,7 +19,8 @@ const Banner = () => {
 		<div
 			className='banner'
 			style={{
-				backgroundImage: data.results && data.results.length > 0 && data.results[0].poster_path ? `url(https://media.themoviedb.org/t/p/w1066_and_h600_bestv2${data.results[0].poster_path})` : 'none',
+				backgroundImage:
+					data && data.results && data.results.length > 0 && data.results[0].poster_path ? `url(https://media.themoviedb.org/t/p/w1066_and_h600_bestv2${data.results[0].poster_path})` : 'none',
 			}}
 		>
 			{data.results && data.results.length > 0 && (
