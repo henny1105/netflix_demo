@@ -24,9 +24,11 @@ const Banner = () => {
 			}}
 		>
 			{data.results && data.results.length > 0 && (
-				<div className='text-white banner-text-area'>
-					<h1>{data.results[0].title}</h1>
-					<p>{data.results[0].overview}</p>
+				<div className='inner'>
+					<div className='text-white banner-text-area'>
+						<h1>{data.results[0].title}</h1>
+						<p>{data.results[0].overview}</p>
+					</div>
 				</div>
 			)}
 		</div>

@@ -32,7 +32,9 @@ const PopularMovieSlide = () => {
 	}
 	return (
 		<div>
-			<h3>Popular Movies</h3>
+			<div className='inner'>
+				<h3 className='section_title'>Popular Movies</h3>
+			</div>
 			{data && data.results && (
 				<Carousel infinite={true} centerMode={true} itemClass='movie-slider p-1' containerClass='carousel-container' responsive={responsive}>
 					{data.results.map((movie, index) => (
