@@ -2,6 +2,7 @@ import React from 'react';
 import { Badge } from 'react-bootstrap';
 import './MovieCard.style.css';
 import { BsFillPeopleFill } from 'react-icons/bs';
+import { MdOutlineDateRange } from 'react-icons/md';
 
 const MovieCard = ({ movie }) => {
 	return (
@@ -23,7 +24,11 @@ const MovieCard = ({ movie }) => {
 						<BsFillPeopleFill />
 						<span>{movie.popularity}</span>
 					</div>
-					<div className='adult'>{movie.adult ? '19+' : ''}</div>
+					<div className='release_date'>
+						<MdOutlineDateRange />
+						{movie.release_date}
+					</div>
+					<div className='adult'>{movie.adult ? '19+' : 'ALL'}</div>
 				</div>
 			</div>
 		</div>

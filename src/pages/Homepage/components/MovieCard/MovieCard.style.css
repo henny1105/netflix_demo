@@ -46,6 +46,16 @@
 .popularity span {
 	font-size: 1.4rem;
 }
+.adult {
+	font-size: 1.4rem;
+	margin-top: 1rem;
+}
+.release_date {
+	font-size: 1.4rem;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
 
 @media screen and (max-width: 767px) {
 }
