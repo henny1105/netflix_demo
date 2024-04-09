@@ -1,7 +1,11 @@
 .movie_card {
-	width: 22rem;
-	height: 33rem;
+	/* width: 22rem; */
+	width: 100%;
+	height: 0;
+	padding-top: 150%;
 	background-size: cover;
+	background-position: center;
+	position: relative;
 	cursor: pointer;
 	transition: transform 0.3s ease-in-out;
 	border-radius: 5px;
@@ -21,6 +25,9 @@
 	justify-content: end;
 	gap: 1rem;
 	border-radius: 5px;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 .overlay:hover {
 	opacity: 1;
@@ -60,6 +67,29 @@
 	font-size: 1.4rem;
 	color: rgb(255 236 30);
 }
+.react-multi-carousel-track {
+	gap: 2rem;
+}
+.movie_list_box {
+	margin-bottom: 7rem;
+}
 
 @media screen and (max-width: 767px) {
+}
+
+@media screen and (max-width: 500px) {
+	.react-multi-carousel-track {
+		gap: 0;
+	}
+	.movie_card {
+		width: 100%;
+		height: 0;
+		padding-top: 150%;
+		background-size: cover;
+		background-position: center;
+		position: relative;
+	}
+	.carousel-container {
+		height: auto;
+	}
 }
