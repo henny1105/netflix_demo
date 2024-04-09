@@ -61,6 +61,24 @@ body {
 	}
 }
 
+@media screen and (max-width: 989px) {
+	.navbar-collapse {
+		position: absolute;
+		z-index: 99;
+		top: 8rem;
+		left: 0;
+		width: 100%;
+		background: #000;
+		padding: 0 2rem 2rem;
+	}
+	.navbar-nav {
+		gap: 0;
+	}
+	.navbar-toggler-icon {
+		filter: invert(1);
+	}
+}
+
 @media screen and (max-width: 767px) {
 	.inner {
 		padding: 0 1.75rem;

@@ -3,12 +3,16 @@ import { Badge } from 'react-bootstrap';
 import './MovieCard.style.css';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import { MdOutlineDateRange } from 'react-icons/md';
+import { useMovieGenreQuery } from '../../pages/hooks/useMovieCenre';
 
 const MovieCard = ({ movie }) => {
 	const renderStarRating = (voteAverage) => {
 		const starRating = Math.round(voteAverage / 2);
 		return Array.from({ length: 5 }, (_, index) => (index < starRating ? '★' : '☆')).join('');
 	};
+
+	const { data: genreData } = useMovieGenreQuery();
+	console.log('ggg', genreData);
 
 	return (
 		<div style={{ backgroundImage: `url(https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${movie.poster_path})` }} className='movie_card'>
