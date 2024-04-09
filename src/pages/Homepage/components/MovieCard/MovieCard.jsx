@@ -15,11 +15,12 @@ const MovieCard = ({ movie }) => {
 			<div className='overlay'>
 				<h1 className='title'>{movie.title}</h1>
 				<div className='id_cont'>
-					{movie.genre_ids.map((id, index) => (
-						<Badge key={`${id}-${index}`} bg='danger'>
-							{id}
-						</Badge>
-					))}
+					{movie.genre_ids &&
+						movie.genre_ids.map((id, index) => (
+							<Badge key={`${id}-${index}`} bg='danger'>
+								{id}
+							</Badge>
+						))}
 				</div>
 				<div className='movie_info'>
 					<div className='vote_average'>

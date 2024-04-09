@@ -1,10 +1,9 @@
 import React from 'react';
-import { usePopularMoviesQuery } from '../../../hooks/usePopularMovie';
+import { useNowPlayingMoviesQuery } from '../../../hooks/useNowPlayingMovie';
 import { Alert } from 'bootstrap';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import MovieCard from '../MovieCard/MovieCard';
-import './PopularMovieSlide.style.css';
 
 const responsive = {
 	desktop: {
@@ -21,8 +20,8 @@ const responsive = {
 	},
 };
 
-const PopularMovieSlide = () => {
-	const { data, isLoading, isError, error } = usePopularMoviesQuery();
+const NowPlayingMovieSlide = () => {
+	const { data, isLoading, isError, error } = useNowPlayingMoviesQuery();
 
 	if (isLoading) {
 		return <h1>Loading...</h1>;
@@ -31,9 +30,9 @@ const PopularMovieSlide = () => {
 		return <Alert variant='danger'>{error.message}</Alert>;
 	}
 	return (
-		<div className='popular_box'>
+		<div className='nowplaying_box'>
 			<div className='inner'>
-				<h3 className='section_title'>Popular Movies</h3>
+				<h3 className='section_title'>NowPlaying Movies</h3>
 			</div>
 			{data && data.results && (
 				<Carousel infinite={true} centerMode={true} itemClass='movie-slider p-1' containerClass='carousel-container' responsive={responsive}>
@@ -46,4 +45,4 @@ const PopularMovieSlide = () => {
 	);
 };
 
-export default PopularMovieSlide;
+export default NowPlayingMovieSlide;
