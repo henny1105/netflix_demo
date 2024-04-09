@@ -13,7 +13,7 @@ const PopularMovieSlide = () => {
 	if (isError) {
 		return <Alert variant='danger'>{error.message}</Alert>;
 	}
-	return <MovieSlider title='top rated Movies' movies={data.results} responsive={responsive}></MovieSlider>;
+	return <MovieSlider title='upcoming Movies' movies={data.results} responsive={responsive}></MovieSlider>;
 };
 
 export default PopularMovieSlide;
