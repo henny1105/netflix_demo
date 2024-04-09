@@ -56,6 +56,10 @@
 	align-items: center;
 	gap: 1rem;
 }
+.vote_average span {
+	font-size: 1.4rem;
+	color: rgb(255 236 30);
+}
 
 @media screen and (max-width: 767px) {
 }

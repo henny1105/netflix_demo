@@ -5,6 +5,11 @@ import { BsFillPeopleFill } from 'react-icons/bs';
 import { MdOutlineDateRange } from 'react-icons/md';
 
 const MovieCard = ({ movie }) => {
+	const renderStarRating = (voteAverage) => {
+		const starRating = Math.round(voteAverage / 2);
+		return Array.from({ length: 5 }, (_, index) => (index < starRating ? '★' : '☆')).join('');
+	};
+
 	return (
 		<div style={{ backgroundImage: `url(https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${movie.poster_path})` }} className='movie_card'>
 			<div className='overlay'>
@@ -17,8 +22,8 @@ const MovieCard = ({ movie }) => {
 					))}
 				</div>
 				<div className='movie_info'>
-					<div className='vote_averge'>
-						<span>{movie.vote_averge}</span>
+					<div className='vote_average'>
+						<span>{renderStarRating(movie.vote_average)}</span>
 					</div>
 					<div className='popularity'>
 						<BsFillPeopleFill />
