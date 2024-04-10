@@ -1,3 +1,28 @@
 .search_list .row {
 	row-gap: 1.5rem;
 }
+.search_list .pagination {
+	padding: 5rem 0;
+	justify-content: center;
+}
+.search_list .page-link {
+	font-size: 1.6rem;
+	padding: 0.6rem 1.2rem;
+	color: #000;
+}
+.search_list .active > .page-link,
+.search_list .page-link.active {
+	background-color: #000;
+	border-color: #000;
+	color: #fff;
+}
+.search_list.container {
+	max-width: 144rem;
+	margin: 0 auto;
+}
+
+@media screen and (max-width: 767px) {
+	.search_list.container {
+		padding: 0 1.75rem;
+	}
+}

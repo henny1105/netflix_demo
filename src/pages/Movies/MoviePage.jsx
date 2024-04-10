@@ -20,9 +20,11 @@ const MoviePage = () => {
 	const [page, setPage] = useState(1);
 	const keyword = query.get('q');
 
-	const { data, isLoading, isError, error } = useSearchMovieQuery({ keyword });
+	const { data, isLoading, isError, error } = useSearchMovieQuery({ keyword, page });
 
-	const handlePageClick = () => {};
+	const handlePageClick = ({ selected }) => {
+		setPage(selected + 1);
+	};
 
 	if (isLoading) {
 		return (
@@ -52,12 +54,12 @@ const MoviePage = () => {
 						))}
 					</Row>
 					<ReactPaginate
-						nextLabel='next >'
+						nextLabel='다음 >'
 						onPageChange={handlePageClick}
 						pageRangeDisplayed={3}
 						marginPagesDisplayed={2}
-						pageCount={page} // 전체 페이지
-						previousLabel='< previous'
+						pageCount={data?.total_pages} // 전체 페이지
+						previousLabel='< 이전'
 						pageClassName='page-item'
 						pageLinkClassName='page-link'
 						previousClassName='page-item'
@@ -70,6 +72,7 @@ const MoviePage = () => {
 						containerClassName='pagination'
 						activeClassName='active'
 						renderOnZeroPageCount={null}
+						forcePage={page - 1}
 					/>
 				</Col>
 			</Row>
