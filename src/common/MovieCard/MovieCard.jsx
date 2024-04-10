@@ -12,7 +12,15 @@ const MovieCard = ({ movie }) => {
 	};
 
 	const { data: genreData } = useMovieGenreQuery();
-	console.log('ggg', genreData);
+
+	const showGenre = (genreIdList) => {
+		if (!genreData) return [];
+		const genreNameList = genreIdList.map((id) => {
+			const genreObj = genreData.find((genre) => genre.id === id);
+			return genreObj.name;
+		});
+		return genreNameList;
+	};
 
 	return (
 		<div style={{ backgroundImage: `url(https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${movie.poster_path})` }} className='movie_card'>
@@ -20,7 +28,7 @@ const MovieCard = ({ movie }) => {
 				<h1 className='title'>{movie.title}</h1>
 				<div className='id_cont'>
 					{movie.genre_ids &&
-						movie.genre_ids.map((id, index) => (
+						showGenre(movie.genre_ids).map((id, index) => (
 							<Badge key={`${id}-${index}`} bg='danger'>
 								{id}
 							</Badge>
