@@ -1,18 +1,21 @@
 import { useMovieDetailsQuery } from '../hooks/fetchMovieDetails';
+import { useMovieReviewsQuery } from '../hooks/fetchMovieReviews';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 const MovieDetailPage = () => {
-	const { id: movieId } = useParams(); // URL에서 `id`라는 이름으로 파라미터를 추출하고, 이를 `movieId` 변수에 할당
+	const { id: movieId } = useParams();
 
 	const { data: movieDetails, isLoading, error } = useMovieDetailsQuery(movieId);
+	const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useMovieReviewsQuery(movieId);
 
-	console.log('movieId: ', movieId); // 콘솔에 movieId 출력
-
-	// 데이터가 로드되거나 업데이트될 때마다 콘솔에 출력
 	useEffect(() => {
-		console.log('Movie Details:', movieDetails);
+		console.log('디테일 정보:', movieDetails);
 	}, [movieDetails]);
+
+	useEffect(() => {
+		console.log('Movie 리뷰:', reviews);
+	}, [reviews]);
 
 	if (isLoading) return <div>Loading...</div>;
 	if (error) return <div>Error: {error.message}</div>;
@@ -23,6 +26,7 @@ const MovieDetailPage = () => {
 				<div>
 					<img src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${movieDetails.poster_path}`} alt={movieDetails.title} />
 					<h2>{movieDetails.title}</h2>
+					<p>{movieDetails.tagline}</p>
 					<p>Genres: {movieDetails.genres?.map((genre) => genre.name).join(', ')}</p>
 					<p>Popularity: {movieDetails.popularity}</p>
 					<p>Overview: {movieDetails.overview}</p>

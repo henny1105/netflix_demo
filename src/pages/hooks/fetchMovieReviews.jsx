@@ -1,11 +1,9 @@
-// fetchMovieReviews.js
-
 import { useQuery } from '@tanstack/react-query';
 import api from '../../utils/api';
 
 const fetchMovieReviews = async (movieId) => {
-	const response = await api.get(`/movie/${movieId}/reviews`);
-	return response.data.reviews;
+	const response = await api.get(`/movie/${movieId}/reviews?language=ko-KR`);
+	return response;
 };
 
 export const useMovieReviewsQuery = (movieId) => {
@@ -13,5 +11,6 @@ export const useMovieReviewsQuery = (movieId) => {
 		queryKey: ['movie-reviews', movieId],
 		queryFn: () => fetchMovieReviews(movieId),
 		staleTime: 600000,
+		select: (result) => result.data,
 	});
 };
