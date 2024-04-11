@@ -4,7 +4,7 @@ import './MovieCard.style.css';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import { MdOutlineDateRange } from 'react-icons/md';
 import { useMovieGenreQuery } from '../../pages/hooks/useMovieCenre';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import { useNavigate } from 'react-router-dom';
 
 const MovieCard = ({ movie }) => {
