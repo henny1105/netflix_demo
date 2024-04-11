@@ -5,6 +5,7 @@ import { BsFillPeopleFill } from 'react-icons/bs';
 import { MdOutlineDateRange } from 'react-icons/md';
 import { useMovieGenreQuery } from '../../pages/hooks/useMovieCenre';
 import ReactPaginate from 'react-paginate';
+import { useNavigate } from 'react-router-dom';
 
 const MovieCard = ({ movie }) => {
 	const renderStarRating = (voteAverage) => {
@@ -23,8 +24,13 @@ const MovieCard = ({ movie }) => {
 		return genreNameList;
 	};
 
+	const navigate = useNavigate();
+	const handleClick = () => {
+		navigate(`/movies/${movie.id}`);
+	};
+
 	return (
-		<div style={{ backgroundImage: `url(https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${movie.poster_path})` }} className='movie_card'>
+		<div style={{ backgroundImage: `url(https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${movie.poster_path})` }} className='movie_card' onClick={handleClick}>
 			<div className='overlay'>
 				<h1 className='title'>{movie.title}</h1>
 				<div className='id_cont'>
