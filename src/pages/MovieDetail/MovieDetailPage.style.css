@@ -12,13 +12,13 @@
 	text-align: right;
 	z-index: 10;
 }
-.movie_detail_all {
-	/* padding: 10rem 0; */
+.movie_detail_all .section_title {
+	padding-bottom: 2.5rem;
 }
 .movie_detail_cont .left_cont .title {
 	font-size: 5rem;
 	font-weight: 700;
-	line-height: 1;
+	line-height: 1.2;
 	/* margin-bottom: 3rem; */
 }
 .movie_detail_cont {
@@ -58,7 +58,8 @@
 .movie_detail_cont .left_cont .title_cont {
 	display: flex;
 	align-items: center;
-	gap: 5rem;
+	margin-bottom: 3rem;
+	gap: 2.5rem;
 }
 .movie_detail_cont .left_cont .youtube_btn button:hover {
 	transform: scale(1.03);
@@ -73,4 +74,42 @@
 }
 .modal-body p {
 	color: #000;
+}
+.movie_review_cont {
+	padding: 0 0 10rem 0;
+}
+.movie_review_cont ul {
+	padding: 0;
+}
+.movie_review_cont ul li {
+	/* border: 1px solid #e50914; */
+	margin-bottom: 4rem;
+	border-radius: 1rem;
+	padding: 2rem;
+	background: #dadada0a;
+}
+.movie_review_cont .star {
+	color: rgb(255, 193, 23);
+}
+.no_cont {
+	padding: 5rem 0;
+	text-align: center;
+}
+.movie_detail_cont .genres {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 2rem;
+}
+.movie_actors_cont {
+	padding-bottom: 10rem;
+}
+.movie_actors_cont img {
+	border-radius: 1rem;
+}
+.movie_actors_cont h4 {
+	font-size: 2rem;
+	margin-top: 1rem;
+}
+.movie_review_cont button {
+	text-decoration: underline;
 }

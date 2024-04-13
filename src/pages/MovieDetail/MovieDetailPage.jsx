@@ -3,12 +3,15 @@ import { useParams } from 'react-router-dom';
 import { useMovieDetailsQuery } from '../hooks/useMovieDetails';
 import { useMovieReviewsQuery } from '../hooks/useMovieReviews';
 import { useRecommedMoviesQuery } from '../hooks/useRecommendMovie';
+import { useMovieActorQuery } from '../hooks/useMovieActor';
 import MovieSlider from '../../common/MovieSlider/MovieSlider';
 import './MovieDetailPage.style.css';
 import { Spinner, Alert, Badge } from 'react-bootstrap';
 import { responsive } from '../../constants/responsive';
 import TrailerModal from './TrailerModal';
 
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 const MovieDetailPage = () => {
 	const { id: movieId } = useParams();
 	const [expandedReviews, setExpandedReviews] = useState({});
@@ -17,6 +20,7 @@ const MovieDetailPage = () => {
 	const { data: movieDetails, isLoading: detailsLoading, error: detailsError } = useMovieDetailsQuery(movieId);
 	const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useMovieReviewsQuery(movieId);
 	const { data: recommend, isLoading: recommendLoading, error: recommendError } = useRecommedMoviesQuery(movieId);
+	const { data: actors, isLoading: actorsLoading, error: actorsError } = useMovieActorQuery(movieId);
 
 	useEffect(() => {
 		console.log('Movie details:', movieDetails);
@@ -30,7 +34,11 @@ const MovieDetailPage = () => {
 		console.log('Recommend reviews:', recommend);
 	}, [recommend]);
 
-	if (detailsLoading || reviewsLoading || recommendLoading) {
+	useEffect(() => {
+		console.log('Movie actors:', actors);
+	}, [actors]);
+
+	if (detailsLoading || reviewsLoading || recommendLoading || actorsLoading) {
 		return (
 			<div className='spinner-area' style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
 				<Spinner animation='border' variant='danger' style={{ width: '5rem', height: '5rem' }} />
@@ -57,6 +65,11 @@ const MovieDetailPage = () => {
 		setShowTrailer(false);
 	};
 
+	const renderStarRating = (voteAverage) => {
+		const starRating = Math.round(voteAverage / 2);
+		return Array.from({ length: 5 }, (_, index) => (index < starRating ? '★' : '☆')).join('');
+	};
+
 	return (
 		<div className='movie_detail_all'>
 			{movieDetails && (
@@ -71,16 +84,17 @@ const MovieDetailPage = () => {
 									</button>
 								</div>
 							</div>
-							<p>{movieDetails.tagline}</p>
-							<p>
+							<div className='genres'>
 								{movieDetails.genres?.map((genre, index) => (
 									<Badge key={`${genre.id}-${index}`} bg='danger'>
 										{genre.name}
 									</Badge>
 								))}
-							</p>
-							<p>Popularity: {movieDetails.popularity}</p>
+							</div>
+							<p>{movieDetails.tagline}</p>
+
 							<p>{movieDetails.overview}</p>
+							<p>Popularity: {movieDetails.popularity}</p>
 							<p>Budget: ${movieDetails.budget.toLocaleString()}</p>
 							<p>개봉일 {movieDetails.release_date}</p>
 						</div>
@@ -91,19 +105,38 @@ const MovieDetailPage = () => {
 					{showTrailer && <TrailerModal movieId={movieId} show={showTrailer} handleClose={handleCloseTrailer} />}
 				</div>
 			)}
+			{actors && actors.length > 0 && (
+				<div className='movie_actors_cont'>
+					<div className=''>
+						<h3 className='section_title inner'>Actors</h3>
+						<Carousel infinite={true} centerMode={true} itemClass='movie-slider p-1' containerClass='carousel-container' responsive={responsive}>
+							{actors.map((actor, index) => (
+								<div key={index} className='actor_card'>
+									{actor.profile_path && <img src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${actor.profile_path}`} alt={actor.name} />}
+									<h4>{actor.name}</h4>
+								</div>
+							))}
+						</Carousel>
+					</div>
+				</div>
+			)}
+
 			{reviews && reviews.results.length > 0 && (
 				<div className='movie_review_cont'>
 					<div className='inner'>
-						<h3>Reviews:</h3>
+						<h3 className='section_title'>Movie Reviews</h3>
 						<ul>
 							{reviews.results.map((review) => {
 								const isReviewExpanded = expandedReviews[review.id];
+								const starsDisplay = renderStarRating(review.author_details.rating);
 								return (
 									<li key={review.id}>
 										<p>
-											<strong>{review.author}</strong> ({review.author_details.username}, Rating: {review.author_details.rating}):
-											{isReviewExpanded ? review.content : `${review.content.substring(0, 500)}...`}
+											<strong>{review.author}</strong>
 										</p>
+										<p>{review.author_details.username}</p>
+										<p className='star'>{starsDisplay}</p>
+										<p>{isReviewExpanded ? review.content : `${review.content.substring(0, 500)}...`}</p>
 										{review.content.length > 100 && <button onClick={() => toggleReview(review.id)}>{isReviewExpanded ? '접기' : '더보기'}</button>}
 									</li>
 								);
@@ -112,7 +145,7 @@ const MovieDetailPage = () => {
 					</div>
 				</div>
 			)}
-			{reviews && reviews.results.length === 0 && <div>리뷰가 없습니다.</div>}
+			{reviews && reviews.results.length === 0 && <div className='inner no_cont'>리뷰가 없습니다.</div>}
 
 			{recommend && recommend.results.length > 0 && (
 				<div>
@@ -120,7 +153,7 @@ const MovieDetailPage = () => {
 				</div>
 			)}
 
-			{recommend && recommend.results.length === 0 && <div>추천 영화가 없습니다.</div>}
+			{recommend && recommend.results.length === 0 && <div className='inner no_cont'>추천 영화가 없습니다.</div>}
 		</div>
 	);
 };
