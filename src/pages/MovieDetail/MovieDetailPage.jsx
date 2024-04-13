@@ -16,6 +16,7 @@ const MovieDetailPage = () => {
 	const { id: movieId } = useParams();
 	const [expandedReviews, setExpandedReviews] = useState({});
 	const [showTrailer, setShowTrailer] = useState(false);
+	const [visibleReviewsCount, setVisibleReviewsCount] = useState(3);
 
 	const { data: movieDetails, isLoading: detailsLoading, error: detailsError } = useMovieDetailsQuery(movieId);
 	const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useMovieReviewsQuery(movieId);
@@ -70,6 +71,10 @@ const MovieDetailPage = () => {
 		return Array.from({ length: 5 }, (_, index) => (index < starRating ? '★' : '☆')).join('');
 	};
 
+	const handleLoadMoreReviews = () => {
+		setVisibleReviewsCount((prevCount) => prevCount + 3);
+	};
+
 	return (
 		<div className='movie_detail_all'>
 			{movieDetails && (
@@ -121,12 +126,12 @@ const MovieDetailPage = () => {
 				</div>
 			)}
 
-			{reviews && reviews.results.length > 0 && (
+			{reviews && (
 				<div className='movie_review_cont'>
 					<div className='inner'>
 						<h3 className='section_title'>Movie Reviews</h3>
 						<ul>
-							{reviews.results.map((review) => {
+							{reviews.results.slice(0, visibleReviewsCount).map((review) => {
 								const isReviewExpanded = expandedReviews[review.id];
 								const starsDisplay = renderStarRating(review.author_details.rating);
 								return (
@@ -137,11 +142,22 @@ const MovieDetailPage = () => {
 										<p>{review.author_details.username}</p>
 										<p className='star'>{starsDisplay}</p>
 										<p>{isReviewExpanded ? review.content : `${review.content.substring(0, 500)}...`}</p>
-										{review.content.length > 100 && <button onClick={() => toggleReview(review.id)}>{isReviewExpanded ? '접기' : '더보기'}</button>}
+										{review.content.length > 100 && (
+											<button className='review_more' onClick={() => toggleReview(review.id)}>
+												{isReviewExpanded ? '접기' : '더보기'}
+											</button>
+										)}
 									</li>
 								);
 							})}
 						</ul>
+						{reviews.results.length > 3 && visibleReviewsCount < reviews.results.length && (
+							<div className='text-center mt-4'>
+								<button className='btn btn-danger' onClick={handleLoadMoreReviews}>
+									더보기
+								</button>
+							</div>
+						)}
 					</div>
 				</div>
 			)}

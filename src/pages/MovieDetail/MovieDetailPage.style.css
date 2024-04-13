@@ -110,6 +110,6 @@
 	font-size: 2rem;
 	margin-top: 1rem;
 }
-.movie_review_cont button {
+.movie_review_cont .review_more {
 	text-decoration: underline;
 }

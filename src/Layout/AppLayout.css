@@ -27,7 +27,7 @@ body {
 	color: #fff;
 }
 .btn-danger {
-	background: transparent;
+	/* background: transparent; */
 }
 .form-control {
 	padding: 0.6rem 1.2rem;
