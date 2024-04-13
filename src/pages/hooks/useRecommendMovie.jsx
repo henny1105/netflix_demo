@@ -10,5 +10,6 @@ export const useRecommedMoviesQuery = (movieId) => {
 		queryKey: ['movieRecommend', movieId],
 		queryFn: () => fetchRecommedMovies(movieId),
 		select: (result) => result.data,
+		enabled: !!movieId,
 	});
 };

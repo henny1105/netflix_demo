@@ -52,6 +52,7 @@ const MovieDetailPage = () => {
 	const handleShowTrailer = () => {
 		setShowTrailer(true);
 	};
+
 	const handleCloseTrailer = () => {
 		setShowTrailer(false);
 	};
@@ -87,7 +88,7 @@ const MovieDetailPage = () => {
 							<img src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${movieDetails.poster_path}`} alt={movieDetails.title} />
 						</div>
 					</div>
-					<TrailerModal movieId={movieId} show={showTrailer} handleClose={handleCloseTrailer} />
+					{showTrailer && <TrailerModal movieId={movieId} show={showTrailer} handleClose={handleCloseTrailer} />}
 				</div>
 			)}
 			{reviews && reviews.results.length > 0 && (
