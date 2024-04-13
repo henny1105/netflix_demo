@@ -56,6 +56,13 @@
 .dropdown-item:active {
 	background-color: #dc3545;
 }
+
+@media screen and (max-width: 1440px) {
+	.search_list.container {
+		max-width: 100%;
+		padding: 5rem;
+	}
+}
 @media screen and (max-width: 767px) {
 	.search_list.container {
 		padding: 0 1.75rem;

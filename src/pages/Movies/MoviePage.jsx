@@ -67,7 +67,7 @@ const MoviePage = () => {
 	}
 
 	return (
-		<Container className='search_list'>
+		<Container className='search_list inner'>
 			<Row>
 				<Col lg={4} xs={12}>
 					<h3>인기순 영화</h3>

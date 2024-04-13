@@ -23,22 +23,6 @@ const MovieDetailPage = () => {
 	const { data: recommend, isLoading: recommendLoading, error: recommendError } = useRecommedMoviesQuery(movieId);
 	const { data: actors, isLoading: actorsLoading, error: actorsError } = useMovieActorQuery(movieId);
 
-	// useEffect(() => {
-	// 	console.log('Movie details:', movieDetails);
-	// }, [movieDetails]);
-
-	// useEffect(() => {
-	// 	console.log('Movie reviews:', reviews);
-	// }, [reviews]);
-
-	// useEffect(() => {
-	// 	console.log('Recommend reviews:', recommend);
-	// }, [recommend]);
-
-	// useEffect(() => {
-	// 	console.log('Movie actors:', actors);
-	// }, [actors]);
-
 	if (detailsLoading || reviewsLoading || recommendLoading || actorsLoading) {
 		return (
 			<div className='spinner-area' style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
@@ -76,6 +60,21 @@ const MovieDetailPage = () => {
 		setVisibleReviewsCount((prevCount) => prevCount + 3);
 	};
 
+	// useEffect(() => {
+	// 	console.log('Movie details:', movieDetails);
+	// }, [movieDetails]);
+
+	// useEffect(() => {
+	// 	console.log('Movie reviews:', reviews);
+	// }, [reviews]);
+
+	// useEffect(() => {
+	// 	console.log('Recommend reviews:', recommend);
+	// }, [recommend]);
+
+	// useEffect(() => {
+	// 	console.log('Movie actors:', actors);
+	// }, [actors]);
 	return (
 		<div className='movie_detail_all'>
 			{movieDetails && (
