@@ -1,0 +1,42 @@
+/* movie_detail_cont */
+
+.movie_detail_cont .inner {
+	display: flex;
+}
+.movie_detail_cont .left_cont {
+	width: 60%;
+	z-index: 10;
+}
+.movie_detail_cont .right_cont {
+	width: 40%;
+	text-align: right;
+	z-index: 10;
+}
+.movie_detail_all {
+	/* padding: 10rem 0; */
+}
+.movie_detail_cont .left_cont .title {
+	font-size: 5rem;
+	font-weight: 700;
+	line-height: 1;
+	margin-bottom: 3rem;
+}
+.movie_detail_cont {
+	padding: 10rem 0;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	position: relative;
+	height: calc(100vh - 7.42rem);
+}
+.movie_detail_cont::before {
+	content: '';
+	background: linear-gradient(to top, black, transparent);
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 102%;
+	backdrop-filter: blur(5px);
+	height: calc(100vh - 7.42rem);
+}
