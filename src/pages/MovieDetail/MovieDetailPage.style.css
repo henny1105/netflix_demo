@@ -19,7 +19,7 @@
 	font-size: 5rem;
 	font-weight: 700;
 	line-height: 1;
-	margin-bottom: 3rem;
+	/* margin-bottom: 3rem; */
 }
 .movie_detail_cont {
 	padding: 10rem 0;
@@ -39,4 +39,38 @@
 	height: 102%;
 	backdrop-filter: blur(5px);
 	height: calc(100vh - 7.42rem);
+}
+.movie_detail_cont .left_cont .youtube_btn button {
+	position: relative;
+	margin-right: 1.333rem;
+	padding: 1.5rem 5rem;
+	background-color: rgb(255, 255, 255);
+	font-size: 2rem;
+	font-weight: 700;
+	color: rgb(0, 0, 0);
+	border-radius: 4px;
+	backdrop-filter: blur(30px);
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+	transition: opacity 0.3s ease 0s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
+}
+.movie_detail_cont .left_cont .title_cont {
+	display: flex;
+	align-items: center;
+	gap: 5rem;
+}
+.movie_detail_cont .left_cont .youtube_btn button:hover {
+	transform: scale(1.03);
+}
+.modal-header {
+	padding: 2rem 2rem 1rem;
+}
+.modal-title.h4 {
+	color: #000;
+	font-size: 4rem;
+	font-weight: 600;
+}
+.modal-body p {
+	color: #000;
 }

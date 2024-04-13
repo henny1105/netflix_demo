@@ -5,12 +5,14 @@ import { useMovieReviewsQuery } from '../hooks/useMovieReviews';
 import { useRecommedMoviesQuery } from '../hooks/useRecommendMovie';
 import MovieSlider from '../../common/MovieSlider/MovieSlider';
 import './MovieDetailPage.style.css';
-import { Spinner, Alert } from 'react-bootstrap';
+import { Spinner, Alert, Badge } from 'react-bootstrap';
 import { responsive } from '../../constants/responsive';
+import TrailerModal from './TrailerModal';
 
 const MovieDetailPage = () => {
 	const { id: movieId } = useParams();
 	const [expandedReviews, setExpandedReviews] = useState({});
+	const [showTrailer, setShowTrailer] = useState(false);
 
 	const { data: movieDetails, isLoading: detailsLoading, error: detailsError } = useMovieDetailsQuery(movieId);
 	const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useMovieReviewsQuery(movieId);
@@ -47,15 +49,35 @@ const MovieDetailPage = () => {
 		}));
 	};
 
+	const handleShowTrailer = () => {
+		setShowTrailer(true);
+	};
+	const handleCloseTrailer = () => {
+		setShowTrailer(false);
+	};
+
 	return (
-		<div class='movie_detail_all'>
+		<div className='movie_detail_all'>
 			{movieDetails && (
 				<div style={{ backgroundImage: `url(https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${movieDetails.backdrop_path})` }} className='movie_detail_cont'>
 					<div className='inner'>
 						<div className='left_cont'>
-							<h2 className='title'>{movieDetails.title}</h2>
+							<div className='title_cont'>
+								<h2 className='title'>{movieDetails.title}</h2>
+								<div className='youtube_btn'>
+									<button type='button' onClick={handleShowTrailer}>
+										예고편 보기
+									</button>
+								</div>
+							</div>
 							<p>{movieDetails.tagline}</p>
-							<p>{movieDetails.genres?.map((genre) => genre.name).join(', ')}</p>
+							<p>
+								{movieDetails.genres?.map((genre, index) => (
+									<Badge key={`${genre.id}-${index}`} bg='danger'>
+										{genre.name}
+									</Badge>
+								))}
+							</p>
 							<p>Popularity: {movieDetails.popularity}</p>
 							<p>{movieDetails.overview}</p>
 							<p>Budget: ${movieDetails.budget.toLocaleString()}</p>
@@ -65,6 +87,7 @@ const MovieDetailPage = () => {
 							<img src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${movieDetails.poster_path}`} alt={movieDetails.title} />
 						</div>
 					</div>
+					<TrailerModal movieId={movieId} show={showTrailer} handleClose={handleCloseTrailer} />
 				</div>
 			)}
 			{reviews && reviews.results.length > 0 && (
