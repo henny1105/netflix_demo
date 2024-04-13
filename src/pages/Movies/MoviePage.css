@@ -19,12 +19,42 @@
 .search_list.container {
 	max-width: 144rem;
 	margin: 0 auto;
+	padding: 5rem 0;
 }
 .spinner-area {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+.popularity_btn {
+	display: flex;
+	gap: 1rem;
+	margin-bottom: 3rem;
+}
+.popularity_btn button {
+	background: #9d9d9d26;
+	border-radius: 0.3rem;
+	transition: all 0.3s;
+	font-size: 1.5rem;
+	padding: 1rem;
+	width: 10rem;
+}
+.popularity_btn button:hover {
+	background: #b02a37;
+}
+.dropdown-item {
+	font-size: 1.5rem;
+}
+.search_list .btn-danger {
+	background: transparent;
+	width: 20rem;
+}
+.search_list .dropdown-menu.show {
+	width: 20rem;
+}
+.dropdown-item:active {
+	background-color: #dc3545;
 }
 @media screen and (max-width: 767px) {
 	.search_list.container {

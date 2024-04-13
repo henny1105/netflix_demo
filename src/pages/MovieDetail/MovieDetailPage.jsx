@@ -23,21 +23,21 @@ const MovieDetailPage = () => {
 	const { data: recommend, isLoading: recommendLoading, error: recommendError } = useRecommedMoviesQuery(movieId);
 	const { data: actors, isLoading: actorsLoading, error: actorsError } = useMovieActorQuery(movieId);
 
-	useEffect(() => {
-		console.log('Movie details:', movieDetails);
-	}, [movieDetails]);
+	// useEffect(() => {
+	// 	console.log('Movie details:', movieDetails);
+	// }, [movieDetails]);
 
-	useEffect(() => {
-		console.log('Movie reviews:', reviews);
-	}, [reviews]);
+	// useEffect(() => {
+	// 	console.log('Movie reviews:', reviews);
+	// }, [reviews]);
 
-	useEffect(() => {
-		console.log('Recommend reviews:', recommend);
-	}, [recommend]);
+	// useEffect(() => {
+	// 	console.log('Recommend reviews:', recommend);
+	// }, [recommend]);
 
-	useEffect(() => {
-		console.log('Movie actors:', actors);
-	}, [actors]);
+	// useEffect(() => {
+	// 	console.log('Movie actors:', actors);
+	// }, [actors]);
 
 	if (detailsLoading || reviewsLoading || recommendLoading || actorsLoading) {
 		return (
@@ -47,9 +47,10 @@ const MovieDetailPage = () => {
 		);
 	}
 
-	if (detailsError) return <Alert variant='danger'>Error: {detailsError.message}</Alert>;
-	if (reviewsError) return <Alert variant='danger'>Error: {reviewsError.message}</Alert>;
-	if (recommendError) return <Alert variant='danger'>Error: {recommendError.message}</Alert>;
+	if (detailsError) return <Alert variant='danger'>Error loading movie details: {detailsError.message}</Alert>;
+	if (reviewsError) return <Alert variant='danger'>Error loading reviews: {reviewsError.message}</Alert>;
+	if (recommendError) return <Alert variant='danger'>Error loading recommendations: {recommendError.message}</Alert>;
+	if (actorsError) return <Alert variant='danger'>Error loading actors: {actorsError.message}</Alert>;
 
 	const toggleReview = (id) => {
 		setExpandedReviews((prevState) => ({
@@ -99,8 +100,8 @@ const MovieDetailPage = () => {
 							<p>{movieDetails.tagline}</p>
 
 							<p>{movieDetails.overview}</p>
-							<p>Popularity: {movieDetails.popularity}</p>
-							<p>Budget: ${movieDetails.budget.toLocaleString()}</p>
+							<p>인기도 {movieDetails.popularity}</p>
+							<p>예산 ${movieDetails.budget.toLocaleString()}</p>
 							<p>개봉일 {movieDetails.release_date}</p>
 						</div>
 						<div className='right_cont'>

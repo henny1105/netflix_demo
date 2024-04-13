@@ -113,3 +113,57 @@
 .movie_review_cont .review_more {
 	text-decoration: underline;
 }
+
+@media screen and (max-width: 767px) {
+	.movie_detail_cont .right_cont {
+		display: none;
+	}
+	.movie_detail_cont .left_cont .title {
+		font-size: 3rem;
+		width: 100%;
+		text-align: left;
+	}
+	.movie_detail_cont .left_cont .title_cont {
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.movie_detail_cont .left_cont .youtube_btn button {
+		font-size: 1.6rem;
+		padding: 1rem;
+		margin: 0;
+	}
+	.movie_detail_cont .left_cont {
+		width: 100%;
+	}
+	.movie_detail_cont p {
+		font-size: 1.5rem;
+	}
+	.modal-title.h4 {
+		font-size: 1.8rem;
+	}
+	.youtube_btn {
+		width: 100%;
+		text-align: left;
+	}
+	.genres .bg-danger {
+		font-size: 1.4rem;
+	}
+	.movie_review_cont {
+		padding: 0 0 3rem 0;
+	}
+	.modal-body p {
+		font-size: 1.4rem;
+	}
+	.movie_review_cont p {
+		font-size: 1.5rem;
+	}
+	.movie_review_cont .review_more {
+		font-size: 1.5rem;
+	}
+	.no_cont {
+		font-size: 1.5rem;
+	}
+	.movie_actors_cont h4 {
+		font-size: 1.5rem;
+	}
+}

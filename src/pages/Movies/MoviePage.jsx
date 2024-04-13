@@ -1,32 +1,60 @@
-import { useSearchMovieQuery } from '../hooks/useSearchMovie';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Alert, Dropdown } from 'react-bootstrap';
 import MovieCard from '../../common/MovieCard/MovieCard';
-import './MoviePage.css';
 import ReactPaginate from 'react-paginate';
-import { useState } from 'react';
-
-// 경로 2가지
-// nav바에서 클릭해서 온 경우 => popularMovie 보여주기
-// keyword를 입력해서 온 경우 => keyword와 관련된 영화들을 보여줌
-
-// 페이지네이션 설치
-// page state 만들기
-// 페이지네이션 클릭할 때마다 page 변경
-// 페이지 값이 바뀔 때 마다 useSearchMovie에 page까지 넣어서 fetch 한다
+import { useSearchMovieQuery } from '../hooks/useSearchMovie';
+import { useMovieGenreQuery } from '../hooks/useMovieGenre';
+import './MoviePage.css';
 
 const MoviePage = () => {
 	const [query] = useSearchParams();
 	const [page, setPage] = useState(1);
 	const keyword = query.get('q');
+	const [movies, setMovies] = useState([]);
+	const [filteredMovies, setFilteredMovies] = useState([]);
 
-	const { data, isLoading, isError, error } = useSearchMovieQuery({ keyword, page });
+	const { data: movieData, isLoading: isMovieLoading, isError: isMovieError, error: movieError, refetch } = useSearchMovieQuery({ keyword, page });
+	const { data: genres, isLoading: isGenreLoading } = useMovieGenreQuery();
+
+	useEffect(() => {
+		if (movieData && movieData.results) {
+			setMovies(movieData.results);
+			setFilteredMovies(movieData.results);
+		}
+	}, [movieData]);
+
+	useEffect(() => {
+		if (keyword) {
+			refetch();
+		}
+	}, [keyword]);
+
+	const filterByGenre = (genreId) => {
+		const filtered = movies.filter((movie) => movie.genre_ids.includes(genreId));
+		setFilteredMovies(filtered);
+	};
+
+	const resetFilter = () => {
+		setFilteredMovies(movies);
+	};
 
 	const handlePageClick = ({ selected }) => {
 		setPage(selected + 1);
 	};
 
-	if (isLoading) {
+	const sortMovies = (sortOrder) => {
+		const sortedMovies = [...movies].sort((a, b) => {
+			if (sortOrder === 'popularity.desc') {
+				return b.popularity - a.popularity;
+			} else {
+				return a.popularity - b.popularity;
+			}
+		});
+		setFilteredMovies(sortedMovies);
+	};
+
+	if (isMovieLoading || isGenreLoading) {
 		return (
 			<div className='spinner-area'>
 				<Spinner animation='border' variant='danger' style={{ width: '5rem', height: '5rem' }} />
@@ -34,20 +62,41 @@ const MoviePage = () => {
 		);
 	}
 
-	if (isError) {
-		return <Alert variant='danger'>{error.message}</Alert>;
+	if (isMovieError) {
+		return <Alert variant='danger'>{movieError.message}</Alert>;
 	}
 
 	return (
 		<Container className='search_list'>
 			<Row>
 				<Col lg={4} xs={12}>
-					{' '}
-					filter{' '}
+					<h3>인기순 영화</h3>
+					<div className='popularity_btn'>
+						<button onClick={() => sortMovies('popularity.desc')}>인기 높은순</button>
+						<button onClick={() => sortMovies('popularity.asc')}>인기 낮은순</button>
+						<button onClick={resetFilter}>초기화</button>
+					</div>
+
+					<h3>장르별 영화</h3>
+					<Dropdown>
+						<Dropdown.Toggle variant='danger' id='dropdown-basic'>
+							장르 선택
+						</Dropdown.Toggle>
+
+						<Dropdown.Menu>
+							<Dropdown.Item onClick={resetFilter}>모든 장르</Dropdown.Item>
+							{genres &&
+								genres.map((genre) => (
+									<Dropdown.Item key={genre.id} onClick={() => filterByGenre(genre.id)}>
+										{genre.name}
+									</Dropdown.Item>
+								))}
+						</Dropdown.Menu>
+					</Dropdown>
 				</Col>
 				<Col lg={8} xs={12}>
 					<Row>
-						{data?.results.map((movie) => (
+						{filteredMovies.map((movie) => (
 							<Col key={movie.id} lg={4} xs={12}>
 								<MovieCard movie={movie} />
 							</Col>
@@ -58,7 +107,7 @@ const MoviePage = () => {
 						onPageChange={handlePageClick}
 						pageRangeDisplayed={3}
 						marginPagesDisplayed={2}
-						pageCount={data?.total_pages} // 전체 페이지
+						pageCount={movieData?.total_pages}
 						previousLabel='< 이전'
 						pageClassName='page-item'
 						pageLinkClassName='page-link'
@@ -71,7 +120,6 @@ const MoviePage = () => {
 						breakLinkClassName='page-link'
 						containerClassName='pagination'
 						activeClassName='active'
-						renderOnZeroPageCount={null}
 						forcePage={page - 1}
 					/>
 				</Col>
