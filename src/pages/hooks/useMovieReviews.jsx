@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import api from '../../utils/api';
 
 const fetchMovieReviews = async (movieId) => {
-	const response = await api.get(`/movie/${movieId}/reviews?language=ko-KR`);
+	const response = await api.get(`/movie/${movieId}/reviews`);
 	return response;
 };
 

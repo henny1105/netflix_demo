@@ -3,7 +3,8 @@ import { Badge } from 'react-bootstrap';
 import './MovieCard.style.css';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import { MdOutlineDateRange } from 'react-icons/md';
-import { useMovieGenreQuery } from '../../pages/hooks/useMovieCenre';
+import { useMovieGenreQuery } from '../../pages/hooks/useMovieGenre';
+
 // import ReactPaginate from 'react-paginate';
 import { useNavigate } from 'react-router-dom';
 
