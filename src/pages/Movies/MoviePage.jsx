@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Container, Row, Col, Spinner, Alert, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Alert, Dropdown, Button } from 'react-bootstrap';
 import MovieCard from '../../common/MovieCard/MovieCard';
 import { useSearchMovieQuery } from '../hooks/useSearchMovie';
 import { useMovieGenreQuery } from '../hooks/useMovieGenre';
@@ -13,6 +13,7 @@ const MoviePage = () => {
 	const [movies, setMovies] = useState([]);
 	const [filteredMovies, setFilteredMovies] = useState([]);
 	const loader = useRef(null);
+	const [showTopButton, setShowTopButton] = useState(false); // Top 버튼 표시 상태
 
 	const { data: movieData, isLoading: isMovieLoading, isError: isMovieError, error: movieError, refetch } = useSearchMovieQuery({ keyword, page });
 	const { data: genres, isLoading: isGenreLoading } = useMovieGenreQuery();
@@ -75,6 +76,25 @@ const MoviePage = () => {
 		setFilteredMovies(sortedMovies);
 	};
 
+	const scrollToTop = () => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	};
+
+	const handleScroll = () => {
+		if (window.pageYOffset > 300) {
+			setShowTopButton(true);
+		} else {
+			setShowTopButton(false);
+		}
+	};
+
+	useEffect(() => {
+		window.addEventListener('scroll', handleScroll);
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	}, []);
+
 	if ((isMovieLoading && page === 1) || isGenreLoading) {
 		return (
 			<div className='spinner-area'>
@@ -124,11 +144,15 @@ const MoviePage = () => {
 						))}
 					</Row>
 					<div ref={loader} className='loader'>
-						{' '}
 						{isMovieLoading && <Spinner animation='border' variant='danger' />}
 					</div>
 				</Col>
 			</Row>
+			{showTopButton && (
+				<Button variant='danger' onClick={scrollToTop} className='top_btn'>
+					Top
+				</Button>
+			)}
 		</Container>
 	);
 };

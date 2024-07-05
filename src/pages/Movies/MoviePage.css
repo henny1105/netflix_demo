@@ -56,6 +56,14 @@
 .dropdown-item:active {
 	background-color: #dc3545;
 }
+.search_list .top_btn {
+	width: 5rem;
+	height: 5rem;
+	border-radius: 50%;
+	position: fixed;
+	bottom: 3rem;
+	right: 3rem;
+}
 
 @media screen and (max-width: 1440px) {
 	.search_list.container {
