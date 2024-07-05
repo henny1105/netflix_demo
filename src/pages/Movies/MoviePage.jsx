@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Container, Row, Col, Spinner, Alert, Dropdown } from 'react-bootstrap';
 import MovieCard from '../../common/MovieCard/MovieCard';
-import ReactPaginate from 'react-paginate';
 import { useSearchMovieQuery } from '../hooks/useSearchMovie';
 import { useMovieGenreQuery } from '../hooks/useMovieGenre';
 import './MoviePage.css';
@@ -13,22 +12,26 @@ const MoviePage = () => {
 	const keyword = query.get('q');
 	const [movies, setMovies] = useState([]);
 	const [filteredMovies, setFilteredMovies] = useState([]);
+	const loader = useRef(null);
 
 	const { data: movieData, isLoading: isMovieLoading, isError: isMovieError, error: movieError, refetch } = useSearchMovieQuery({ keyword, page });
 	const { data: genres, isLoading: isGenreLoading } = useMovieGenreQuery();
 
 	useEffect(() => {
-		if (movieData && movieData.results) {
-			setMovies(movieData.results);
-			setFilteredMovies(movieData.results);
-		}
-	}, [movieData]);
-
-	useEffect(() => {
 		if (keyword) {
+			setMovies([]);
+			setFilteredMovies([]);
+			setPage(1);
 			refetch();
 		}
-	}, [keyword]);
+	}, [keyword, refetch]);
+
+	useEffect(() => {
+		if (movieData && movieData.results) {
+			setMovies((prevMovies) => [...prevMovies, ...movieData.results]);
+			setFilteredMovies((prevMovies) => [...prevMovies, ...movieData.results]);
+		}
+	}, [movieData]);
 
 	const filterByGenre = (genreId) => {
 		const filtered = movies.filter((movie) => movie.genre_ids.includes(genreId));
@@ -39,12 +42,30 @@ const MoviePage = () => {
 		setFilteredMovies(movies);
 	};
 
-	const handlePageClick = ({ selected }) => {
-		setPage(selected + 1);
-	};
+	const handleObserver = useCallback((entries) => {
+		const target = entries[0];
+		if (target.isIntersecting) {
+			setPage((prev) => prev + 1);
+		}
+	}, []);
+
+	useEffect(() => {
+		const option = {
+			root: null,
+			rootMargin: '20px',
+			threshold: 1.0,
+		};
+
+		const observer = new IntersectionObserver(handleObserver, option);
+		if (loader.current) observer.observe(loader.current);
+
+		return () => {
+			if (loader.current) observer.unobserve(loader.current);
+		};
+	}, [handleObserver]);
 
 	const sortMovies = (sortOrder) => {
-		const sortedMovies = [...movies].sort((a, b) => {
+		const sortedMovies = [...filteredMovies].sort((a, b) => {
 			if (sortOrder === 'popularity.desc') {
 				return b.popularity - a.popularity;
 			} else {
@@ -54,7 +75,7 @@ const MoviePage = () => {
 		setFilteredMovies(sortedMovies);
 	};
 
-	if (isMovieLoading || isGenreLoading) {
+	if ((isMovieLoading && page === 1) || isGenreLoading) {
 		return (
 			<div className='spinner-area'>
 				<Spinner animation='border' variant='danger' style={{ width: '5rem', height: '5rem' }} />
@@ -102,26 +123,10 @@ const MoviePage = () => {
 							</Col>
 						))}
 					</Row>
-					<ReactPaginate
-						nextLabel='다음 >'
-						onPageChange={handlePageClick}
-						pageRangeDisplayed={3}
-						marginPagesDisplayed={2}
-						pageCount={movieData?.total_pages}
-						previousLabel='< 이전'
-						pageClassName='page-item'
-						pageLinkClassName='page-link'
-						previousClassName='page-item'
-						previousLinkClassName='page-link'
-						nextClassName='page-item'
-						nextLinkClassName='page-link'
-						breakLabel='...'
-						breakClassName='page-item'
-						breakLinkClassName='page-link'
-						containerClassName='pagination'
-						activeClassName='active'
-						forcePage={page - 1}
-					/>
+					<div ref={loader} className='loader'>
+						{' '}
+						{isMovieLoading && <Spinner animation='border' variant='danger' />}
+					</div>
 				</Col>
 			</Row>
 		</Container>
