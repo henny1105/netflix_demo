@@ -6,6 +6,20 @@ import { useSearchMovieQuery } from '../hooks/useSearchMovie';
 import { useMovieGenreQuery } from '../hooks/useMovieGenre';
 import './MoviePage.css';
 
+// throttle 함수 구현
+const throttle = (func, limit) => {
+	let inThrottle;
+	return function () {
+		const args = arguments;
+		const context = this;
+		if (!inThrottle) {
+			func.apply(context, args);
+			inThrottle = true;
+			setTimeout(() => (inThrottle = false), limit);
+		}
+	};
+};
+
 const MoviePage = () => {
 	const [query] = useSearchParams();
 	const location = useLocation();
@@ -15,6 +29,7 @@ const MoviePage = () => {
 	const [filteredMovies, setFilteredMovies] = useState([]);
 	const loader = useRef(null);
 	const [showTopButton, setShowTopButton] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const { data: movieData, isLoading: isMovieLoading, isError: isMovieError, error: movieError, refetch } = useSearchMovieQuery({ keyword, page });
 	const { data: genres, isLoading: isGenreLoading } = useMovieGenreQuery();
@@ -23,11 +38,9 @@ const MoviePage = () => {
 		setMovies([]);
 		setFilteredMovies([]);
 		setPage(1);
-	}, [keyword, location]);
-
-	useEffect(() => {
+		setIsLoading(true); // 데이터 로딩 시작
 		refetch();
-	}, [page, keyword, refetch]);
+	}, [keyword, location, refetch]);
 
 	useEffect(() => {
 		if (movieData && movieData.results) {
@@ -36,6 +49,7 @@ const MoviePage = () => {
 			};
 			setMovies(uniqueMovies);
 			setFilteredMovies(uniqueMovies);
+			setIsLoading(false); // 데이터 로딩 완료
 		}
 	}, [movieData]);
 
@@ -47,12 +61,17 @@ const MoviePage = () => {
 		setFilteredMovies(movies);
 	};
 
-	const handleObserver = useCallback((entries) => {
-		const target = entries[0];
-		if (target.isIntersecting) {
-			setPage((prev) => prev + 1);
-		}
-	}, []);
+	const handleObserver = useCallback(
+		throttle((entries) => {
+			const target = entries[0];
+			if (target.isIntersecting && !isLoading) {
+				setIsLoading(true); // 데이터 로딩 시작
+				setPage((prev) => prev + 1);
+				console.log('실행중');
+			}
+		}, 1000),
+		[isLoading]
+	);
 
 	useEffect(() => {
 		const observer = new IntersectionObserver(handleObserver, {
@@ -61,12 +80,20 @@ const MoviePage = () => {
 			threshold: 1.0,
 		});
 
-		if (loader.current) observer.observe(loader.current);
+		const observeLoader = () => {
+			if (loader.current) {
+				observer.observe(loader.current);
+			} else {
+				setTimeout(observeLoader, 100); // loader 요소가 존재하지 않으면 100ms 후 재시도
+			}
+		};
+
+		observeLoader();
 
 		return () => {
 			if (loader.current) observer.unobserve(loader.current);
 		};
-	}, [handleObserver, page, keyword, movies]);
+	}, [handleObserver]);
 
 	const sortMovies = (sortOrder) => {
 		const sortedMovies = [...filteredMovies].sort((a, b) => {
