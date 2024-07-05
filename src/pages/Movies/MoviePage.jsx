@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Spinner, Alert, Dropdown, Button } from 'react-bootstrap';
 import MovieCard from '../../common/MovieCard/MovieCard';
 import { useSearchMovieQuery } from '../hooks/useSearchMovie';
@@ -8,35 +8,39 @@ import './MoviePage.css';
 
 const MoviePage = () => {
 	const [query] = useSearchParams();
+	const location = useLocation();
 	const [page, setPage] = useState(1);
 	const keyword = query.get('q');
 	const [movies, setMovies] = useState([]);
 	const [filteredMovies, setFilteredMovies] = useState([]);
 	const loader = useRef(null);
-	const [showTopButton, setShowTopButton] = useState(false); // Top 버튼 표시 상태
+	const [showTopButton, setShowTopButton] = useState(false);
 
 	const { data: movieData, isLoading: isMovieLoading, isError: isMovieError, error: movieError, refetch } = useSearchMovieQuery({ keyword, page });
 	const { data: genres, isLoading: isGenreLoading } = useMovieGenreQuery();
 
 	useEffect(() => {
-		if (keyword) {
-			setMovies([]);
-			setFilteredMovies([]);
-			setPage(1);
-			refetch();
-		}
-	}, [keyword, refetch]);
+		setMovies([]);
+		setFilteredMovies([]);
+		setPage(1);
+	}, [keyword, location]);
+
+	useEffect(() => {
+		refetch();
+	}, [page, keyword, refetch]);
 
 	useEffect(() => {
 		if (movieData && movieData.results) {
-			setMovies((prevMovies) => [...prevMovies, ...movieData.results]);
-			setFilteredMovies((prevMovies) => [...prevMovies, ...movieData.results]);
+			const uniqueMovies = (prevMovies) => {
+				return [...prevMovies, ...movieData.results].filter((movie, index, self) => self.findIndex((m) => m.id === movie.id) === index);
+			};
+			setMovies(uniqueMovies);
+			setFilteredMovies(uniqueMovies);
 		}
 	}, [movieData]);
 
 	const filterByGenre = (genreId) => {
-		const filtered = movies.filter((movie) => movie.genre_ids.includes(genreId));
-		setFilteredMovies(filtered);
+		setFilteredMovies(movies.filter((movie) => movie.genre_ids.includes(genreId)));
 	};
 
 	const resetFilter = () => {
@@ -51,27 +55,22 @@ const MoviePage = () => {
 	}, []);
 
 	useEffect(() => {
-		const option = {
+		const observer = new IntersectionObserver(handleObserver, {
 			root: null,
 			rootMargin: '20px',
 			threshold: 1.0,
-		};
+		});
 
-		const observer = new IntersectionObserver(handleObserver, option);
 		if (loader.current) observer.observe(loader.current);
 
 		return () => {
 			if (loader.current) observer.unobserve(loader.current);
 		};
-	}, [handleObserver]);
+	}, [handleObserver, page, keyword, movies]);
 
 	const sortMovies = (sortOrder) => {
 		const sortedMovies = [...filteredMovies].sort((a, b) => {
-			if (sortOrder === 'popularity.desc') {
-				return b.popularity - a.popularity;
-			} else {
-				return a.popularity - b.popularity;
-			}
+			return sortOrder === 'popularity.desc' ? b.popularity - a.popularity : a.popularity - b.popularity;
 		});
 		setFilteredMovies(sortedMovies);
 	};
@@ -81,11 +80,7 @@ const MoviePage = () => {
 	};
 
 	const handleScroll = () => {
-		if (window.pageYOffset > 300) {
-			setShowTopButton(true);
-		} else {
-			setShowTopButton(false);
-		}
+		setShowTopButton(window.pageYOffset > 300);
 	};
 
 	useEffect(() => {
@@ -144,7 +139,7 @@ const MoviePage = () => {
 						))}
 					</Row>
 					<div ref={loader} className='loader'>
-						{isMovieLoading && <Spinner animation='border' variant='danger' />}
+						{isMovieLoading && <Spinner animation='grow' variant='danger' />}
 					</div>
 				</Col>
 			</Row>
