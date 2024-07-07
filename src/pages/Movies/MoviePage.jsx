@@ -44,11 +44,11 @@ const MoviePage = () => {
 
 	useEffect(() => {
 		if (movieData && movieData.results) {
-			const uniqueMovies = (prevMovies) => {
-				return [...prevMovies, ...movieData.results].filter((movie, index, self) => self.findIndex((m) => m.id === movie.id) === index);
-			};
-			setMovies(uniqueMovies);
-			setFilteredMovies(uniqueMovies);
+			setMovies((prevMovies) => {
+				const uniqueMovies = [...prevMovies, ...movieData.results].filter((movie, index, self) => self.findIndex((m) => m.id === movie.id) === index);
+				setFilteredMovies(uniqueMovies);
+				return uniqueMovies;
+			});
 			setIsLoading(false); // 데이터 로딩 완료
 		}
 	}, [movieData]);
@@ -61,7 +61,7 @@ const MoviePage = () => {
 		setFilteredMovies(movies);
 	};
 
-	const observer = useRef();
+	const observer = useRef(null);
 
 	const handleObserver = useCallback(
 		(entries) => {
@@ -69,7 +69,6 @@ const MoviePage = () => {
 			if (target.isIntersecting && !isLoading) {
 				setIsLoading(true); // 데이터 로딩 시작
 				setPage((prev) => prev + 1);
-				console.log('실행중');
 			}
 		},
 		[isLoading]
@@ -77,11 +76,13 @@ const MoviePage = () => {
 
 	useEffect(() => {
 		const throttledObserver = throttle(handleObserver, 1000);
-		observer.current = new IntersectionObserver(throttledObserver, {
-			root: null,
-			rootMargin: '20px',
-			threshold: 1.0,
-		});
+		if (!observer.current) {
+			observer.current = new IntersectionObserver(throttledObserver, {
+				root: null,
+				rootMargin: '20px',
+				threshold: 1.0,
+			});
+		}
 
 		const currentLoader = loader.current;
 		if (currentLoader) {
