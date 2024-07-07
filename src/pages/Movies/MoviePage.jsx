@@ -34,6 +34,17 @@ const MoviePage = () => {
 	const { data: movieData, isLoading: isMovieLoading, isError: isMovieError, error: movieError, refetch } = useSearchMovieQuery({ keyword, page });
 	const { data: genres, isLoading: isGenreLoading } = useMovieGenreQuery();
 
+	// 영화 데이터 업데이트
+	const updateMovies = (newMovies) => {
+		setMovies(newMovies);
+		setFilteredMovies(newMovies);
+		setIsLoading(false); // 데이터 로딩 완료
+	};
+
+	const uniqueMovies = (prevMovies, newMovies) => {
+		return [...prevMovies, ...newMovies].filter((movie, index, self) => self.findIndex((m) => m.id === movie.id) === index);
+	};
+
 	useEffect(() => {
 		setMovies([]);
 		setFilteredMovies([]);
@@ -44,14 +55,39 @@ const MoviePage = () => {
 
 	useEffect(() => {
 		if (movieData && movieData.results) {
-			const uniqueMovies = (prevMovies) => {
-				return [...prevMovies, ...movieData.results].filter((movie, index, self) => self.findIndex((m) => m.id === movie.id) === index);
-			};
-			setMovies(uniqueMovies);
-			setFilteredMovies(uniqueMovies);
-			setIsLoading(false); // 데이터 로딩 완료
+			updateMovies(uniqueMovies(movies, movieData.results));
 		}
-	}, [movieData]);
+	}, [movieData, movies]);
+
+	const throttledObserver = throttle((entries) => {
+		const target = entries[0];
+		if (target.isIntersecting && !isLoading) {
+			setIsLoading(true); // 데이터 로딩 시작
+			setPage((prev) => prev + 1);
+		}
+	}, 1000);
+
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				throttledObserver(entries);
+			},
+			{
+				root: null,
+				rootMargin: '20px',
+				threshold: 1.0,
+			}
+		);
+
+		const currentLoader = loader.current;
+		if (currentLoader) {
+			observer.observe(currentLoader);
+		}
+
+		return () => {
+			if (currentLoader) observer.unobserve(currentLoader);
+		};
+	}, [throttledObserver, isLoading]);
 
 	const filterByGenre = (genreId) => {
 		setFilteredMovies(movies.filter((movie) => movie.genre_ids.includes(genreId)));
@@ -60,40 +96,6 @@ const MoviePage = () => {
 	const resetFilter = () => {
 		setFilteredMovies(movies);
 	};
-
-	const handleObserver = useCallback(
-		throttle((entries) => {
-			const target = entries[0];
-			if (target.isIntersecting && !isLoading) {
-				setIsLoading(true); // 데이터 로딩 시작
-				setPage((prev) => prev + 1);
-				console.log('실행중');
-			}
-		}, 1000),
-		[isLoading]
-	);
-
-	useEffect(() => {
-		const observer = new IntersectionObserver(handleObserver, {
-			root: null,
-			rootMargin: '20px',
-			threshold: 1.0,
-		});
-
-		const observeLoader = () => {
-			if (loader.current) {
-				observer.observe(loader.current);
-			} else {
-				setTimeout(observeLoader, 100); // loader 요소가 존재하지 않으면 100ms 후 재시도
-			}
-		};
-
-		observeLoader();
-
-		return () => {
-			if (loader.current) observer.unobserve(loader.current);
-		};
-	}, [handleObserver]);
 
 	const sortMovies = (sortOrder) => {
 		const sortedMovies = [...filteredMovies].sort((a, b) => {
