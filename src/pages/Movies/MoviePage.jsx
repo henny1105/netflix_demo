@@ -6,20 +6,6 @@ import { useSearchMovieQuery } from '../hooks/useSearchMovie';
 import { useMovieGenreQuery } from '../hooks/useMovieGenre';
 import './MoviePage.css';
 
-// throttle 함수 구현
-const throttle = (func, limit) => {
-	let inThrottle;
-	return function () {
-		const args = arguments;
-		const context = this;
-		if (!inThrottle) {
-			func.apply(context, args);
-			inThrottle = true;
-			setTimeout(() => (inThrottle = false), limit);
-		}
-	};
-};
-
 const MoviePage = () => {
 	const [query] = useSearchParams();
 	const location = useLocation();
@@ -69,24 +55,24 @@ const MoviePage = () => {
 			if (target.isIntersecting && !isLoading) {
 				setIsLoading(true); // 데이터 로딩 시작
 				setPage((prev) => prev + 1);
+				console.log('호출');
 			}
 		},
 		[isLoading]
 	);
 
 	useEffect(() => {
-		const throttledObserver = throttle(handleObserver, 1000);
 		if (!observer.current) {
-			observer.current = new IntersectionObserver(throttledObserver, {
-				root: null,
-				rootMargin: '20px',
-				threshold: 1.0,
+			observer.current = new IntersectionObserver(handleObserver, {
+				root: null, // viewport
+				rootMargin: '20px', // viewport 기준으로 20px 안쪽에서 호출
+				threshold: 1.0, // 1.0 이상일 때 호출
 			});
 		}
 
 		const currentLoader = loader.current;
 		if (currentLoader) {
-			observer.current.observe(currentLoader);
+			observer.current.observe(currentLoader); //
 		}
 
 		return () => {
